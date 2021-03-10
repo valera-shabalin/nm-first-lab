@@ -5,8 +5,7 @@
 }
 
 body {
-    height: 100vh;
-    width: 100vw;
+    padding: 50px 0;
     font-size: 14px;
     font-family: sans-serif;
     display: flex;
@@ -16,6 +15,7 @@ body {
 }
 
 .container {
+    min-width: 560px;
     max-width: 960px;
     padding: 0 15px;
 }
@@ -64,4 +64,16 @@ input.invalid {
 .fields-group label {
     margin-bottom: 5px;
     font-size: 12px;
+}
+
+table {
+    margin-top: 30px;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+table tr td {
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #bdc3c7;
 }
