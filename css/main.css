@@ -24,8 +24,9 @@ h1 {
     margin-bottom: 20px;
 }
 
-input, select {
-    padding: 10px 12px;
+input, select, button {
+    height: 45px;
+    padding: 0 10px;
     border: 1px solid #bdc3c7;
     border-radius: 5px;
     background: none;
@@ -41,6 +42,12 @@ input.invalid {
     border: 1px solid #e74c3c;
 }
 
+.btn {
+    border: 1px solid #3498db;
+    background: #3498db;
+    color: #fff;
+}
+
 .fields {
     margin-bottom: 30px;
 }
@@ -51,7 +58,7 @@ input.invalid {
     flex-wrap: wrap;
 }
 
-.fields-wrapper .fields-group, select {
+.fields-wrapper .fields-group, select, button {
     margin-bottom: 10px;
     flex: 0 0 48%;
 }

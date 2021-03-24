@@ -10,22 +10,22 @@
     <section class="fields">
         <div class="container">
             <h1>Решение нелинейных уравнений</h1>
-            <div class="fields-wrapper">
+            <form class="fields-wrapper" onsubmit="startCalculate(); return false">
                 <div class="fields-group">
                     <label for="fun">Функция</label>
-                    <input type="text" id="fun" placeholder="Исходная функция" value="x+4">
+                    <input type="text" id="fun" placeholder="Исходная функция" value="cos(x)">
                 </div>
                 <div class="fields-group">
                     <label for="left">Левая граница</label>
-                    <input type="number" id="left" placeholder="Левая граница" value="-5">
+                    <input type="text" id="left" placeholder="Левая граница" value="-4">
                 </div>
                 <div class="fields-group">
                     <label for="right">Правая граница</label>
-                    <input type="number" id="right" placeholder="Правая граница" value="0">
+                    <input type="text" id="right" placeholder="Правая граница" value="2">
                 </div>
                 <div class="fields-group">
                     <label for="eps">Допустимая погрешность</label>
-                    <input type="number" id="eps" placeholder="Погрешность" value="0.01">
+                    <input type="text" id="eps" placeholder="Погрешность" value="0.001">
                 </div>
                 <select name="method" id="method">
                     <option value="1" selected="selected">Метод дихотомии</option>
@@ -33,7 +33,8 @@
                     <option value="3">Метод Ньютона</option>
                     <option value="4">Метод итераций</option>
                 </select>
-            </div>
+                <button class="btn">Вычислить</button>
+            </form>
         </div>
     </section>
     <section class="chart">
@@ -49,6 +50,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.2.0/math.js" integrity="sha512-SewEag0kt1xsJdbfAXgLyLvYXeAoGEla4M6JSitT6ocJVI+VeUbFXkgrbloNn4cVgq46caRf31un2eoalq6YOw==" crossorigin="anonymous"></script>
+    <script src="js/equal.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>
