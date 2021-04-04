@@ -1,66 +1,127 @@
-const options = {
+/* Slider options */
+const mySliderOptions = {
     scales: {
-        yAxes: [{
-            type: 'linear',
-        }],
-        xAxes: [{
-            type: 'linear',
-        }]
+        yAxes: [
+            {
+                type: 'linear',
+            }
+        ],
+        xAxes: [
+            {
+                type: 'linear',
+            }
+        ]
     }
 }
-const data = {
-    datasets: [{
-        label: 'График функции',
-        fill: false,
-        borderColor: '#3498db',
-        pointRadius: 2,
-        data: []
-    }]
+const mySliderData = {
+    datasets: [
+        {
+            label: 'График функции',
+            pointBackgroundColor: '#3498db',
+            borderColor: '#3498db',
+            fill: false,
+            data: []
+        }
+    ]
 }
 
+/* Interface */
 const select = document.querySelector('.fields-wrapper select')
-let ctx = document.querySelector('#myChart').getContext("2d")
-let chart = new Chart(ctx, { type: 'line', data, options })
-let myObj = new Equal()
+const form = document.querySelector('.fields-wrapper')
 
-function updateChart(fun, left, right) {
+/* Chart */
+let ctx = document.querySelector('#myChart').getContext("2d")
+let chart = new Chart(ctx, {
+        type: 'line',
+        data: mySliderData,
+        options: mySliderOptions
+})
+let equal = new Equal()
+
+function createData(fun, left, right) {
     let data = []
 
-    for (let i = left; i < right; i++) {
+    for (let i = left - 4; i < right + 4; i++) {
         data.push({
-            x: i,
-            y: fun.evaluate({ x: i })
+            x: +i,
+            y: +fun.evaluate({ x: i })
         })
     }
 
-    chart.data.datasets[0].data = data
+    return data
+}
+
+/* Function for updating chart */
+function updateChart(data = [], index = 0) {
+    console.group("Update chart")
+    console.log(data)
+    console.log(`Dataset[${index}]`)
+    console.groupEnd()
+
+    chart.data.datasets[index].data = data
     chart.update()
 
     return true
 }
 
-function startCalculate() {
+/* Function for create the table with results */
+function createTable(data, eps) {
+    let table = document.querySelector('.table table')
+
+    let html = `<tr>
+                    <td class="number"><strong>№</strong></td>
+                    <td><strong>Значение X</strong></td>
+                    <td><strong>Значение F(X)</strong></td>
+                </tr>`
+
+    data.forEach((item, index) => {
+        html += `<tr>
+                     <td class="number">${++index}</td>
+                     <td>${item.x}</td>
+                     <td>${item.f}</td>
+                 </tr>`
+    })
+
+    html += `<tr>
+                 <td colspan="3"><strong>Погрешность:</strong> ${eps}</td>
+             </tr>`
+
+    table.innerHTML = html
+
+    return true
+}
+
+/* Main function which start calculation */
+function startCalculate(event) {
+    event.preventDefault()
+
     const fun = document.querySelector('input#fun').value
-    const left = document.querySelector('input#left').value
-    const right = document.querySelector('input#right').value
-    const eps = document.querySelector('input#eps').value
-    const method = document.querySelector('select#method')
+    const left = +document.querySelector('input#left').value
+    const right = +document.querySelector('input#right').value
+    const eps = +document.querySelector('input#eps').value
+    const method = select.options.selectedIndex
 
     if (!fun || !left || !right || !eps)
         return false
 
-    myObj.set(fun, left, right, eps)
+    equal.set(fun, left, right, eps)
 
-    updateChart(myObj.fun, left, right)
+    const chartData = createData(equal.fun, left, right)
+    updateChart(chartData)
 
-    switch (method.options.selectedIndex) {
+    switch (method) {
         case 0:
-            const data = myObj.dichotomies()
-            console.log(data)
+        {
+            const result = equal.dichotomies()
+            createTable(result.data, result.eps)
             break
+        }
         case 1:
-
+        {
+            const result = equal.newton()
+            createTable(result.data, result.eps)
             break
+        }
         case 2:
             break
         default:
@@ -68,5 +129,7 @@ function startCalculate() {
     }
 }
 
+/* DOM events */
 window.addEventListener('DOMContentLoaded', startCalculate)
 select.addEventListener('change', startCalculate)
+form.addEventListener('submit', startCalculate)
