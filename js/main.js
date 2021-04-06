@@ -36,8 +36,8 @@ let chart = new Chart(ctx, {
         data: mySliderData,
         options: mySliderOptions
 })
-let equal = new Equal()
 
+/* Function for create data */
 function createData(fun, left, right) {
     let data = []
 
@@ -95,30 +95,30 @@ function createTable(data, eps) {
 function startCalculate(event) {
     event.preventDefault()
 
-    const fun = document.querySelector('input#fun').value
+    const _fun = document.querySelector('input#fun').value
     const left = +document.querySelector('input#left').value
     const right = +document.querySelector('input#right').value
     const eps = +document.querySelector('input#eps').value
     const method = select.options.selectedIndex
 
-    if (!fun || !left || !right || !eps)
+    if (!_fun || !left || !right || !eps)
         return false
 
-    equal.set(fun, left, right, eps)
+    let fun = math.parse(_fun)
 
-    const chartData = createData(equal.fun, left, right)
+    const chartData = createData(fun, left, right)
     updateChart(chartData)
 
     switch (method) {
         case 0:
         {
-            const result = equal.dichotomies()
+            const result = dichotomies(fun, left, right, eps)
             createTable(result.data, result.eps)
             break
         }
         case 1:
         {
-            const result = equal.newton()
+            const result = newton(fun, left, right, eps)
             createTable(result.data, result.eps)
             break
         }

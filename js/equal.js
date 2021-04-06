@@ -1,69 +1,55 @@
-class Equal {
-    constructor(fun = '', left = 0, right = 0, eps = 0) {
-        this.set(fun, left, right, eps)
+function newton(_fun, _left, _right, _eps) {
+    let data = []
+
+    let f = 0,
+        df = 0,
+        x = 0,
+        x0 = 0,
+        fl = _fun.evaluate({ x: _left }),
+        ddf = math.derivative(math.derivative(_fun, 'x'), 'x').evaluate({ x: _left })
+
+    if (fl * ddf > 0)
+        x0 = _left
+    else
+        x0 = _right
+
+    x = x0 - _fun.evaluate({ x: x0 }) / math.derivative(_fun, 'x').evaluate({ x: x0 });
+    while (Math.abs(x0 - x) > _eps) {
+        x0 = x;
+
+        x = x0 - _fun.evaluate({ x }) / math.derivative(_fun, 'x').evaluate({ x });
+
+        data.push({ x, f })
     }
 
-    dichotomies() {
-        let f = 0,
-            x = 0,
-            l = this.left,
-            r = this.right,
-            data = []
+    const eps = (_eps - Math.abs(f)) / 2
 
-        do {
-            x = (l + r) / 2
+    return { x, f, eps, data }
+}
 
-            f = this.fun.evaluate({ x })
+function dichotomies(_fun, _left, _right, _eps) {
+    let data = []
 
-            if (f > 0)
-                r = x
-            else
-                l = x
+    let f = 0,
+        x = 0,
+        l = _left,
+        r = _right
 
-            data.push({ x, f })
+    do {
+        x = (l + r) / 2
 
-        } while (Math.abs(r - l) > this.eps)
+        f = _fun.evaluate({ x })
 
-        const eps = (this.eps - Math.abs(f)) / 2
-
-        return { f, x, eps, data }
-    }
-
-    newton() {
-        let f = 0,
-            df = 0,
-            x = 0,
-            h = 0,
-            data = [],
-            fl = this.fun.evaluate({ x: this.left }),
-            ddf = math.derivative(this.fun, 'x')
-
-        ddf = math.derivative(ddf, 'x').evaluate({ x: this.left })
-
-        if (fl * ddf > 0)
-            x = this.left
+        if (f > 0)
+            r = x
         else
-            x = this.right
+            l = x
 
-        do {
-            f = this.fun.evaluate({ x })
-            df = math.derivative(this.fun, 'x').evaluate({ x })
+        data.push({ x, f })
 
-            x = x - f / df
+    } while (Math.abs(r - l) > _eps)
 
-            data.push({ x, f })
+    const eps = (_eps - Math.abs(f)) / 2
 
-        } while(Math.abs(f) > this.eps)
-
-        const eps = (this.eps - Math.abs(f)) / 2
-
-        return { f, x, eps, data }
-    }
-
-    set(fun, left, right, eps) {
-        this.fun = math.parse(fun)
-        this.left = +left
-        this.right = +right
-        this.eps = +eps
-    }
+    return { x, f, eps, data }
 }
