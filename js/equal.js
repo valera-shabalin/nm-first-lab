@@ -1,5 +1,5 @@
 function dichotomies(_fun, _left, _right, _eps) {
-    let data = []
+    const data = []
 
     let x = (_left + _right) / 2,
         f = _fun.evaluate({ x }),
@@ -26,7 +26,7 @@ function dichotomies(_fun, _left, _right, _eps) {
 } // READY
 
 function chord(_fun, _left, _right, _eps) {
-    let data = []
+    const data = []
 
     let fl = _fun.evaluate({ x: _left }),
         fr = _fun.evaluate({ x: _right })
@@ -58,7 +58,7 @@ function chord(_fun, _left, _right, _eps) {
 } // READY?
 
 function newton(_fun, _left, _right, _eps) {
-    let data = []
+    const data = []
 
     let x, x0, f, df,
         f0 = _fun.evaluate({ x: _left }),
@@ -88,19 +88,54 @@ function newton(_fun, _left, _right, _eps) {
 } // READY?
 
 function gold(_fun, _left, _right, _eps) {
-    let data = []
+    const data = [],
+          y = (Math.sqrt(5) + 1) / 2
 
-    let y = (Math.sqrt(5) + 1) / 2,
-        c = _left + (_right - _left) / Math.pow(y, 2),
-        d = _left + (_right - _left) / y,
-        x = (_left + _right) / 2,
+    let d, x, f, fd,
+        fa = _fun.evaluate({ x: _left })
+        
+    do {
+        d = _left + (_right - _left) / y
+        fd = _fun.evaluate({ x: d })
+
+        if (fa * fd <= 0) {
+            _right = d
+        } else {
+            _left = _right - d + _left
+            fa = _fun.evaluate({ x: _left })
+        }
+
+        x = (_left + _right) / 2
         f = _fun.evaluate({ x })
 
-    while (Math.abs(f) > _eps || (_right - _left) / 2 > _eps) {
-        if () {
+        data.push({ x, f })
+    } while (Math.abs(f) > _eps || (_right - _left) / 2 > _eps)
 
-        } else {
+    const eps = Math.abs((_right - _left)  / 2)
 
-        }
-    }
-}
+    return { x, f, data, eps }
+} // READY?
+
+function iteration(_fun, _left, _right, _eps) {
+    const data = []
+
+    const fa = math.derivative(_fun, 'x').evaluate({ x: _left }),
+        fb = math.derivative(_fun, 'x').evaluate({ x: _right }),
+        fmax = fa > fb ? fa : fb
+
+    let x = _left, x0,
+        f = _fun.evaluate({ x })
+
+    do {
+        x0 = x
+
+        x = x - f / fmax
+        f = _fun.evaluate({ x })
+
+        data.push({ x, f })
+    } while(Math.abs(f) > _eps || Math.abs(x - x0) > _eps)
+
+    const eps = Math.abs(x - x0)
+
+    return { x, f, data, eps }
+} // READY?

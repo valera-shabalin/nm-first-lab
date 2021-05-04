@@ -136,6 +136,8 @@ function startCalculate(event) {
         }
         case 4:
         {
+            const result = iteration(fun, left, right, eps)
+            createTable(result.data, result.eps)
             break
         }
         default:
