@@ -77,13 +77,13 @@ function createTable(data, eps) {
     data.forEach((item, index) => {
         html += `<tr>
                      <td class="number">${++index}</td>
-                     <td>${item.x}</td>
-                     <td>${item.f}</td>
+                     <td>${item.x.toFixed(7)}</td>
+                     <td>${item.f.toFixed(7)}</td>
                  </tr>`
     })
 
     html += `<tr>
-                 <td colspan="3"><strong>Погрешность:</strong> ${eps}</td>
+                 <td colspan="3"><strong>Погрешность:</strong> ${eps.toFixed(7)}</td>
              </tr>`
 
     table.innerHTML = html
@@ -118,14 +118,30 @@ function startCalculate(event) {
         }
         case 1:
         {
-            const result = newton(fun, left, right, eps)
+            const result = chord(fun, left, right, eps)
             createTable(result.data, result.eps)
             break
         }
         case 2:
+        {
+            const result = gold(fun, left, right, eps)
+            createTable(result.data, result.eps)
             break
+        }
+        case 3:
+        {
+            const result = newton(fun, left, right, eps)
+            createTable(result.data, result.eps)
+            break
+        }
+        case 4:
+        {
+            break
+        }
         default:
+        {
             break
+        }
     }
 }
 

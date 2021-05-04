@@ -1,55 +1,106 @@
-function newton(_fun, _left, _right, _eps) {
+function dichotomies(_fun, _left, _right, _eps) {
     let data = []
 
-    let f = 0,
-        df = 0,
-        x = 0,
-        x0 = 0,
-        fl = _fun.evaluate({ x: _left }),
-        ddf = math.derivative(math.derivative(_fun, 'x'), 'x').evaluate({ x: _left })
+    let x = (_left + _right) / 2,
+        f = _fun.evaluate({ x }),
+        fl = _fun.evaluate({ x: _left })
+    data.push({ x, f })
 
-    if (fl * ddf > 0)
-        x0 = _left
-    else
-        x0 = _right
+    while (Math.abs(f) > _eps || (_right - _left) / 2 > _eps) {
+        if (fl * f <= 0) {
+            _right = x
+        } else {
+            _left = x
+            fl = f
+        }
 
-    x = x0 - _fun.evaluate({ x: x0 }) / math.derivative(_fun, 'x').evaluate({ x: x0 });
-    while (Math.abs(x0 - x) > _eps) {
-        x0 = x;
-
-        x = x0 - _fun.evaluate({ x }) / math.derivative(_fun, 'x').evaluate({ x });
+        x = (_left + _right) / 2
+        f = _fun.evaluate({ x })
 
         data.push({ x, f })
     }
 
-    const eps = (_eps - Math.abs(f)) / 2
+    const eps = Math.abs((_right - _left)  / 2)
 
-    return { x, f, eps, data }
-}
+    return { x, f, data, eps }
+} // READY
 
-function dichotomies(_fun, _left, _right, _eps) {
+function chord(_fun, _left, _right, _eps) {
     let data = []
 
-    let f = 0,
-        x = 0,
-        l = _left,
-        r = _right
+    let fl = _fun.evaluate({ x: _left }),
+        fr = _fun.evaluate({ x: _right })
+
+    let x0, x = _left - fl * (_right - _left) / (fr - fl),
+        f = _fun.evaluate({ x })
+    data.push({ x, f })
 
     do {
-        x = (l + r) / 2
+        x0 = x
 
+        if (fl * f <= 0) {
+            _right = x
+            fr = f
+        } else {
+            _left = x
+            fl = f
+        }
+
+        x = _left - fl * (_right - _left) / (fr - fl)
         f = _fun.evaluate({ x })
 
-        if (f > 0)
-            r = x
-        else
-            l = x
+        data.push({ x, f })
+    } while (Math.abs(f) > _eps || Math.abs(x - x0) > _eps)
+
+    const eps = Math.abs(x - x0)
+
+    return { x, f, data, eps }
+} // READY?
+
+function newton(_fun, _left, _right, _eps) {
+    let data = []
+
+    let x, x0, f, df,
+        f0 = _fun.evaluate({ x: _left }),
+        ddf = math.derivative(math.derivative(_fun, 'x'), 'x').evaluate({ x: _left })
+
+    if (f0 * ddf > 0) {
+        x = _left
+        f = f0
+    } else {
+        x = _right
+        f = _fun.evaluate({ x: _right })
+    }
+
+    do {
+        x0 = x
+
+        df = math.derivative(_fun, 'x').evaluate({ x })
+        x = x - f / df
+        f = _fun.evaluate({ x })
 
         data.push({ x, f })
+    } while (Math.abs(f) > _eps || Math.abs(x - x0) > _eps)
 
-    } while (Math.abs(r - l) > _eps)
+    const eps = Math.abs(x - x0)
 
-    const eps = (_eps - Math.abs(f)) / 2
+    return { x, f, data, eps }
+} // READY?
 
-    return { x, f, eps, data }
+function gold(_fun, _left, _right, _eps) {
+    let data = []
+
+    let y = (Math.sqrt(5) + 1) / 2,
+        c = _left + (_right - _left) / Math.pow(y, 2),
+        d = _left + (_right - _left) / y,
+        x = (_left + _right) / 2,
+        f = _fun.evaluate({ x })
+
+    while (Math.abs(f) > _eps || (_right - _left) / 2 > _eps) {
+        if () {
+
+        } else {
+
+        }
+    }
 }
