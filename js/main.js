@@ -53,11 +53,6 @@ function createData(fun, left, right) {
 
 /* Function for updating chart */
 function updateChart(data = [], index = 0) {
-    console.group("Update chart")
-    console.log(data)
-    console.log(`Dataset[${index}]`)
-    console.groupEnd()
-
     chart.data.datasets[index].data = data
     chart.update()
 
@@ -77,13 +72,13 @@ function createTable(data, eps) {
     data.forEach((item, index) => {
         html += `<tr>
                      <td class="number">${++index}</td>
-                     <td>${item.x.toFixed(7)}</td>
-                     <td>${item.f.toFixed(7)}</td>
+                     <td>${item.x.toFixed(5)}</td>
+                     <td>${item.f.toFixed(5)}</td>
                  </tr>`
     })
 
     html += `<tr>
-                 <td colspan="3"><strong>Погрешность:</strong> ${eps.toFixed(7)}</td>
+                 <td colspan="3"><strong>Погрешность:</strong> ${eps.toExponential(3)}</td>
              </tr>`
 
     table.innerHTML = html
@@ -137,6 +132,12 @@ function startCalculate(event) {
         case 4:
         {
             const result = iteration(fun, left, right, eps)
+            createTable(result.data, result.eps)
+            break
+        }
+        case 5:
+        {
+            const result = combination(fun, left, right, eps)
             createTable(result.data, result.eps)
             break
         }
